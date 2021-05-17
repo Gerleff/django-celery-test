@@ -17,7 +17,7 @@ class AccountTestCase(TestCase):
         response = c.get(response_endpoint)
         body = json.loads(response.content.decode('utf8'))
         self.assertEquals(response.status_code, 200)
-        print(json.dumps(body, indent=4, sort_keys=True))
+        print(json.dumps(body, indent=4, sort_keys=True, ensure_ascii=False))
         print('----------------------------------------------------------------------')
 
     def _test_patch_response(self, response_endpoint: str, data: dict):
@@ -27,29 +27,29 @@ class AccountTestCase(TestCase):
         response = c.patch(response_endpoint, f'{data}'.replace('\'', '"'))
         body = json.loads(response.content.decode('utf8'))
         self.assertEquals(response.status_code, 200)
-        print(json.dumps(body, indent=4, sort_keys=True))
+        print(json.dumps(body, indent=4, sort_keys=True, ensure_ascii=False))
         print('----------------------------------------------------------------------')
 
     def test_ping(self):
         self._test_get_response('/api/ping')
 
     def test_status(self):
-        self._test_get_response(f"/api/status/{ACCOUNTS['bad_status']}")
-        self._test_get_response(f"/api/status/{ACCOUNTS['good_status']}")
+        self._test_get_response(f"/api/status/{self.ACCOUNTS['bad_status']}")
+        self._test_get_response(f"/api/status/{self.ACCOUNTS['good_status']}")
 
     def test_add(self):
         patch_data = {'addition': 77777}
         error_data = {'addition': -77777}
-        self._test_patch_response(f"/api/add/{ACCOUNTS['bad_status']}", patch_data)
-        self._test_patch_response(f"/api/add/{ACCOUNTS['good_status']}", patch_data)
-        self._test_patch_response(f"/api/add/{ACCOUNTS['good_status']}", error_data)
+        self._test_patch_response(f"/api/add/{self.ACCOUNTS['bad_status']}", patch_data)
+        self._test_patch_response(f"/api/add/{self.ACCOUNTS['good_status']}", patch_data)
+        self._test_patch_response(f"/api/add/{self.ACCOUNTS['good_status']}", error_data)
 
     def test_substract(self):
         patch_data = {'substraction': 111}
         error_data = {'substraction': -111}
-        self._test_patch_response(f"/api/substract/{ACCOUNTS['bad_status']}", patch_data)
-        self._test_patch_response(f"/api/substract/{ACCOUNTS['good_status']}", patch_data)
-        self._test_patch_response(f"/api/substract/{ACCOUNTS['bad_substraction']}", patch_data)
-        self._test_patch_response(f"/api/substract/{ACCOUNTS['extra_bad_substraction']}", patch_data)
-        self._test_patch_response(f"/api/substract/{ACCOUNTS['good_status']}", error_data)
+        self._test_patch_response(f"/api/substract/{self.ACCOUNTS['bad_status']}", patch_data)
+        self._test_patch_response(f"/api/substract/{self.ACCOUNTS['good_status']}", patch_data)
+        self._test_patch_response(f"/api/substract/{self.ACCOUNTS['bad_substraction']}", patch_data)
+        self._test_patch_response(f"/api/substract/{self.ACCOUNTS['extra_bad_substraction']}", patch_data)
+        self._test_patch_response(f"/api/substract/{self.ACCOUNTS['good_status']}", error_data)
 
